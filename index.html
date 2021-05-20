@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link href="index.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container">
+        <table class="table table-striped" id="Country">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col"><button id="0" onclick="sortTable(0)">
+                            <h4>Name</h4>
+                        </button></th>
+                    <th scope="col"><button id="1" onclick="sortTable(1)">
+                            <h4>Capital</h4>
+                        </button></th>
+                    <th scope="col"><button id="2" onclick="sortTable(2)">
+                            <h4>Region</h4>
+                        </button></th>
+                    <th scope="col"><button id="3" onclick="sortTable(3)">
+                            <h4>Subregion</h4>
+                        </button></th>
+                    <th scope="col"><button id="4" onclick="sortTable(4)">
+                            <h4>Demonym</h4>
+                        </button></th>
+                </tr>
+            </thead>
+            <tbody id="data">
+
+            </tbody>
+        </table>
+    </div>
+    <script>
+        const sort = ["des", "des", "des", "des", "des"];
+        fetch("https://restcountries.eu/rest/v2/all").then(
+            res => {
+                res.json().then(
+                    data => {
+                        if (data.length > 0) {
+                            var temp = "";
+                            var dt = "";
+                            data.forEach((dt) => {
+
+                                temp += "<tr>";
+                                temp += "<td>" + dt.name + "</td>";
+                                temp += "<td>" + dt.capital + "</td>";
+                                temp += "<td>" + dt.region + "</td>";
+                                temp += "<td>" + dt.subregion + "</td>";
+                                temp += "<td>" + dt.demonym + "</td></tr>";
+                            })
+
+                            document.getElementById("data").innerHTML = temp;
+                        }
+                    }
+                )
+            }
+        )
+        function sortTable(index) {
+            sort[index] = sort[index] === "asc" ? "des" : "asc";
+            var table, rows, switching, i, x, y, shouldSwitch;
+            table = document.getElementById("Country");
+            switching = true;
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("td")[index];
+                    y = rows[i + 1].getElementsByTagName("td")[index];
+                    if (sort[index] === "asc" && x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                    else if (sort[index] === "des" && x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
